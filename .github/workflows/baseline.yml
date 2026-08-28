@@ -1,0 +1,33 @@
+name: Baseline checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  repository-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Validate required baseline files
+        shell: bash
+        run: |
+          set -euo pipefail
+          for file in .editorconfig .gitignore DEV-SETUP.md; do
+            test -f "$file"
+          done
+
+      - name: Check for likely committed secrets
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git grep -nI -E '(AKIA[0-9A-Z]{16}|-----BEGIN (RSA|OPENSSH|EC|PRIVATE) KEY-----|ghp_[A-Za-z0-9]{30,})' -- ':!*.md'; then
+            echo 'Potential secret detected.' >&2
+            exit 1
+          fi
