@@ -17,6 +17,8 @@ git status
 
 Push 또는 Pull Request 생성 시 GitHub Actions가 기본 파일과 의심스러운 비밀정보를 검사합니다.
 
+의존성 업데이트는 Dependabot이 월 1회 제안합니다.
+
 ## Node.js 템플릿
 
 ```powershell
